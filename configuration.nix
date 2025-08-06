@@ -70,6 +70,14 @@
   # Install Hyprland
   programs.hyprland.enable = true;
 
+  # Install Zsh
+  programs.zsh.enable = true;
+  programs.zsh.autosuggestions.enable = true;
+  programs.zsh.zsh-autoenv.enable = true;
+
+  # Set global default shell
+  users.defaultUserShell = pkgs.zsh;
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "fr";
