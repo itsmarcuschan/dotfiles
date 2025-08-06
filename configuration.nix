@@ -70,6 +70,10 @@
   # Install Hyprland
   programs.hyprland.enable = true;
 
+  # Install GNOME Desktop Environment
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
+
   # Install Zsh
   programs.zsh.enable = true;
   programs.zsh.autosuggestions.enable = true;
