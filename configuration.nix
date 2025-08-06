@@ -45,7 +45,7 @@
 
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = true;
+  # services.xserver.enable = true;
 
   # Install Oracle VirtualBox
   # virtualisation.virtualbox.host.enable = true;
@@ -55,6 +55,10 @@
   # nixpkgs.config.allowUnfree = true;
   # virtualisation.virtualbox.host.enable = true;
   # virtualisation.virtualbox.host.enableExtensionPack = true;
+
+  # Install Virtualbox Guest Additions
+  virtualisation.virtualbox.guest.enable = true;
+  virtualisation.virtualbox.guest.dragAndDrop = true;
 
   # Install VMware Tools
   # virtualisation.vmware.guest.enable = true;
@@ -102,6 +106,7 @@
     isNormalUser = true;
     description = "Marcus";
     extraGroups = [ "networkmanager" "wheel" ];
+    shell = pkgs.zsh;
     packages = with pkgs; [
       kdePackages.kate
       vim
@@ -116,7 +121,9 @@
       waybar
       wofi
       hyprpaper
+      deluge
       qbittorrent
+      vscode
     ];
   };
 
