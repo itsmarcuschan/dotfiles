@@ -2,17 +2,19 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      <home-manager/nixos>
     ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.editor = false;
 
   boot.initrd.luks.devices."luks-e10909c5-aa7b-4b67-a00f-b1359c0925e4".device = "/dev/disk/by-uuid/e10909c5-aa7b-4b67-a00f-b1359c0925e4";
 
@@ -53,18 +55,19 @@
     LC_TIME = "fr_FR.UTF-8";
   };
 
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
   # services.xserver.enable = true;
 
   # Install Oracle VirtualBox
-  # virtualisation.virtualbox.host.enable = true;
-  # users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 
   # Install VirtualBox Extension Pack
-  # nixpkgs.config.allowUnfree = true;
-  # virtualisation.virtualbox.host.enable = true;
-  # virtualisation.virtualbox.host.enableExtensionPack = true;
+  virtualisation.virtualbox.host.enableExtensionPack = true;
 
   # Install Virtualbox Guest Additions
   # virtualisation.virtualbox.guest.enable = true;
@@ -79,6 +82,18 @@
   
   # Install Hyprland
   programs.hyprland.enable = true;
+
+  # Install Docker
+  virtualisation.docker = {
+    enable = true;
+  };
+
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+  };
 
   # Install Zsh
   programs.zsh.enable = true;
@@ -123,7 +138,7 @@
   users.users.marcus = {
     isNormalUser = true;
     description = "Marcus";
-    extraGroups = [ "networkmanager" "wheel" "audio" "input" "video" "storage" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "input" "video" "storage" "vboxusers" "docker" ];
     shell = pkgs.zsh;
     packages = with pkgs; [
       vim
@@ -142,7 +157,7 @@
       qbittorrent
       vscode
       font-awesome
-      discord-ptb
+      discord
       pavucontrol
       nerd-fonts.fira-code
       spotify
@@ -151,14 +166,26 @@
       grim
       slurp
       wl-clipboard
+      google-chrome
+      vlc
+      obs-studio
+      cmatrix
+      clamav
+      chkrootkit
+      lynis
+      gcc
+      htop
+      hyprlock
+      ani-cli
     ];
   };
 
   # Install firefox.
   programs.firefox.enable = true;
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  # Install ClamAV daemon & updater
+  services.clamav.daemon.enable = true;
+  services.clamav.updater.enable = true;
 
   # Install NVIDIA Driver RTX 2080
 
