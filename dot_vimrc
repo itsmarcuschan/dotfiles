@@ -1,0 +1,56 @@
+set nocompatible
+filetype off
+
+set number
+set norelativenumber
+set numberwidth=4
+set listchars=space:·,tab:▸\
+nnoremap <F6> :set list!<CR>
+autocmd FileType yaml,terraform,yaml.gotexttmpl set listchars=space:·,tab:▸\
+
+" vim-plug
+call plug#begin('~/.vim/plugged')
+
+Plug 'catppuccin/vim', { 'as': 'catppuccin' }   " Catppuccin colorscheme
+Plug 'hashivim/vim-terraform'                   " Terraform syntax + fmt on save
+Plug 'mrk21/yaml-vim'                           " YAML syntax highlighting
+Plug 'sheerun/vim-polyglot'                     " Language pack (50+ languages)
+Plug 'tpope/vim-commentary'                     " gcc to comment/uncomment
+Plug 'tpope/vim-surround'                       " Change quotes/brackets easily
+Plug 'preservim/nerdtree'                       " File explorer
+Plug 'dense-analysis/ale'                       " Linting (terraform, yaml, shell)
+Plug 'pearofducks/ansible-vim'                  " Ansible syntax highlighting
+Plug 'junegunn/fzf.vim'                         " Fuzzy finder
+Plug 'itchyny/lightline.vim'                    " Lightweight statusbar
+
+call plug#end()
+
+filetype plugin indent on
+
+" Catppuccin
+set termguicolors
+let g:catppuccin_flavour = 'mocha'
+colorscheme catppuccin_mocha
+
+" NERDTree
+nnoremap <C-n> :NERDTreeToggle<CR>
+
+" ALE
+let g:ale_linters = {
+  \ 'terraform': ['tflint'],
+  \ 'yaml': ['yamllint'],
+  \ 'sh': ['shellcheck'],
+  \ }
+let g:ale_fix_on_save = 1
+
+" Terraform fmt on save
+let g:terraform_fmt_on_save = 1
+
+" lightline
+set laststatus=2
+set noshowmode
+let g:lightline = {
+      \ 'colorscheme': 'catppuccin_mocha',
+      \ }
+
+autocmd BufRead,BufNewFile cloud-init*.yaml.tmpl set syntax=yaml.gotexttmpl filetype=yaml.gotexttmpl
